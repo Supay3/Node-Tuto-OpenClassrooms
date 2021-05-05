@@ -1,6 +1,16 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+mongoose
+    .connect('mongodb+srv://supay3:Cm678DffLN3cw8E@cluster0.5qkcv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('Connexion à MongoDB réussie !'))
+    .catch(() => console.error('Echec de la connexion à MongoDB'))
+;
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
