@@ -1,9 +1,11 @@
 const Thing = require('../models/Thing');
 
 exports.createThing = (req, res) => {
-    delete req.body._id;
+    const thingObject = JSON.parse(req.body.thing);
+    delete thingObject._id;
     const thing = new Thing({
-        ...req.body
+        ...thingObject,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     thing
         .save()
@@ -13,8 +15,14 @@ exports.createThing = (req, res) => {
 };
 
 exports.updateThing = (req, res) => {
+    const thingObject = req.file ?
+        {
+            ...JSON.parse(req.body.thing),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } :
+        {...req.body};
     Thing.updateOne({ _id: req.params.id }, {
-        ...req.body,
+        ...thingObject,
         _id: req.params.id
     })
         .then(() => res.status(200).json({ message: 'Objet modifié !' }))
